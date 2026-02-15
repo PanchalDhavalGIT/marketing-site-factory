@@ -1,6 +1,7 @@
 """Batch execution engine — runs N site builds concurrently with asyncio."""
 
 import asyncio
+import json
 import signal
 import sys
 from pathlib import Path
@@ -125,10 +126,20 @@ class BatchRunner:
             await self.theme_engine.release(theme["id"])
 
             if success:
-                # Try to read deploy results
+                # Try to read deploy results from workspace files
                 github_url, pages_url = _read_deploy_results(workspace)
-                await self.progress.complete_site(slug, github_url, pages_url)
-                site_logger.info(f"Build complete: github={github_url}, pages={pages_url}")
+
+                # Fallback: check GitHub for the repo if no URLs found
+                if not github_url:
+                    github_url, pages_url = await _discover_deploy_urls(slug)
+
+                if github_url or pages_url:
+                    await self.progress.complete_site(slug, github_url, pages_url)
+                    site_logger.info(f"Build complete: github={github_url}, pages={pages_url}")
+                else:
+                    # Session succeeded but deployment didn't produce URLs
+                    await self.progress.complete_site(slug, None, None)
+                    site_logger.warning(f"Build succeeded but no deploy URLs found for {slug}")
             else:
                 await self.progress.fail_site(slug, result.error[:500] if result else "Unknown error")
                 site_logger.error(f"Build failed after {retry_count} retries")
@@ -162,24 +173,70 @@ class BatchRunner:
 
 
 def _read_deploy_results(workspace: Path) -> tuple[str | None, str | None]:
-    """Read deployment result files from workspace. Returns (github_url, pages_url)."""
+    """Read deployment result files from workspace. Searches root and subdirs."""
     github_url = None
     pages_url = None
 
-    status_file = workspace / "status.json"
-    if status_file.exists():
-        import json
-        with open(status_file) as f:
-            data = json.load(f)
-            github_url = data.get("github_url")
-            pages_url = data.get("pages_url")
-
-    deploy_file = workspace / "deploy-result.json"
-    if deploy_file.exists():
-        import json
-        with open(deploy_file) as f:
-            data = json.load(f)
-            github_url = github_url or data.get("github_url") or data.get("repo_url")
-            pages_url = pages_url or data.get("pages_url")
+    # Search for status.json and deploy-result.json in workspace and subdirs
+    for search_dir in [workspace] + [d for d in workspace.iterdir() if d.is_dir() and d.name != ".claude"]:
+        for fname in ["status.json", "deploy-result.json"]:
+            fpath = search_dir / fname
+            if fpath.exists():
+                try:
+                    with open(fpath) as f:
+                        data = json.load(f)
+                        github_url = github_url or data.get("github_url") or data.get("repo_url")
+                        pages_url = pages_url or data.get("pages_url")
+                except (json.JSONDecodeError, OSError):
+                    pass
 
     return github_url, pages_url
+
+
+async def _discover_deploy_urls(slug: str) -> tuple[str | None, str | None]:
+    """Fallback: check GitHub to see if repo marketing-{slug} exists and get URLs."""
+    repo_name = f"marketing-{slug}"
+
+    try:
+        # Get owner
+        proc = await asyncio.create_subprocess_exec(
+            "gh", "api", "user", "--jq", ".login",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, _ = await proc.communicate()
+        if proc.returncode != 0:
+            return None, None
+        owner = stdout.decode().strip()
+
+        # Check if repo exists
+        proc = await asyncio.create_subprocess_exec(
+            "gh", "repo", "view", f"{owner}/{repo_name}", "--json", "url",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, _ = await proc.communicate()
+        if proc.returncode != 0:
+            return None, None
+
+        data = json.loads(stdout.decode())
+        github_url = data.get("url", f"https://github.com/{owner}/{repo_name}")
+
+        # Try to get Pages URL
+        proc = await asyncio.create_subprocess_exec(
+            "gh", "api", f"repos/{owner}/{repo_name}/pages", "--jq", ".html_url",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, _ = await proc.communicate()
+        pages_url = None
+        if proc.returncode == 0:
+            pages_url = stdout.decode().strip() or f"https://{owner}.github.io/{repo_name}/"
+        else:
+            # Pages not enabled yet, but construct expected URL
+            pages_url = f"https://{owner}.github.io/{repo_name}/"
+
+        return github_url, pages_url
+
+    except Exception:
+        return None, None

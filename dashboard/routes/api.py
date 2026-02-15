@@ -137,6 +137,20 @@ async def retry_site(request: Request, slug: str):
     )
 
 
+# ── Discover URLs ────────────────────────────────────────────────
+
+@router.post("/discover-urls", response_class=HTMLResponse)
+async def discover_urls(request: Request):
+    """Re-scan GitHub for deploy URLs on completed sites missing them."""
+    msg = await state.discover_missing_urls()
+    progress = state.get_progress()
+    stats = state.get_stats()
+    return request.app.state.templates.TemplateResponse(
+        "partials/progress_table.html",
+        {"request": request, "progress": progress, "stats": stats, "message": msg},
+    )
+
+
 # ── Cleanup ──────────────────────────────────────────────────────
 
 @router.post("/clear/progress", response_class=HTMLResponse)

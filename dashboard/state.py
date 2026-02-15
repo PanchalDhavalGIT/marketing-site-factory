@@ -236,6 +236,37 @@ class DashboardState:
         asyncio.create_task(runner.run(matching[:1]))
         return f"Retrying build for '{slug}'..."
 
+    # ── Discover Missing URLs ─────────────────────────────────────
+
+    async def discover_missing_urls(self) -> str:
+        """Re-scan GitHub for deploy URLs on completed sites missing them."""
+        from orchestrator.batch_runner import _discover_deploy_urls
+
+        progress = self.get_progress()
+        candidates = [
+            (slug, data) for slug, data in progress.items()
+            if data.get("status") == "complete"
+            and not data.get("github_url")
+        ]
+
+        if not candidates:
+            return "All completed sites already have URLs."
+
+        found = 0
+        for slug, data in candidates:
+            github_url, pages_url = await _discover_deploy_urls(slug)
+            if github_url:
+                data["github_url"] = github_url
+                data["pages_url"] = pages_url
+                found += 1
+
+        if found > 0:
+            # Write updated progress back
+            with open(PROGRESS_FILE, "w") as f:
+                json.dump(progress, f, indent=2)
+
+        return f"Discovered URLs for {found}/{len(candidates)} sites."
+
     # ── Cleanup ──────────────────────────────────────────────────
 
     def clear_progress(self) -> str:
