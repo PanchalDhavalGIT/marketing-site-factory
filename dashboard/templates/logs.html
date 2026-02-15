@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% set active = "logs" %}
+
+{% block title %}Logs{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl">
+  <h2 class="text-2xl font-bold text-white mb-2">Logs</h2>
+  <p class="text-gray-500 text-sm mb-6">View per-site build logs and the orchestrator log</p>
+
+  {% if log_files %}
+  <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-800/50">
+        <tr>
+          <th class="px-4 py-3 text-left text-gray-400 font-medium">Log File</th>
+          <th class="px-4 py-3 text-left text-gray-400 font-medium">Size</th>
+          <th class="px-4 py-3 text-left text-gray-400 font-medium">Last Modified</th>
+          <th class="px-4 py-3 text-right text-gray-400 font-medium">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-800">
+        {% for log in log_files %}
+        <tr class="hover:bg-gray-800/30">
+          <td class="px-4 py-3">
+            <span class="font-mono text-white">{{ log.name }}</span>
+            {% if log.name == "orchestrator" %}
+              <span class="ml-2 text-xs bg-brand-600/20 text-brand-400 rounded px-1.5 py-0.5">main</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3 text-gray-400">{{ "%.1f"|format(log.size / 1024) }} KB</td>
+          <td class="px-4 py-3 text-gray-500 text-xs">{{ log.modified[:19] }}</td>
+          <td class="px-4 py-3 text-right">
+            <a href="/logs/{{ log.name }}"
+               class="text-brand-400 hover:text-brand-300 text-sm">View</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
+      <p class="text-gray-500">No log files yet. Logs appear after you start a batch build.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

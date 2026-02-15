@@ -1,0 +1,17 @@
+<div class="flex items-center gap-2 text-sm">
+  {% if "Started" in message %}
+    <span class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></span>
+    <span class="text-green-400">{{ message }}</span>
+  {% elif "Shutdown" in message %}
+    <span class="w-2 h-2 bg-amber-400 rounded-full"></span>
+    <span class="text-amber-400">{{ message }}</span>
+  {% elif "already running" in message %}
+    <span class="w-2 h-2 bg-yellow-400 rounded-full"></span>
+    <span class="text-yellow-400">{{ message }}</span>
+  {% elif "No" in message %}
+    <span class="w-2 h-2 bg-red-400 rounded-full"></span>
+    <span class="text-red-400">{{ message }}</span>
+  {% else %}
+    <span class="text-gray-400">{{ message }}</span>
+  {% endif %}
+</div>

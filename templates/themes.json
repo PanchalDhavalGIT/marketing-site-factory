@@ -1,0 +1,470 @@
+[
+  {
+    "id": "modern-minimal",
+    "name": "Modern Minimal",
+    "colors": {
+      "primary": "#1a1a2e",
+      "secondary": "#16213e",
+      "accent": "#0f3460",
+      "background": "#f8f9fa",
+      "surface": "#ffffff",
+      "text": "#1a1a2e",
+      "text_muted": "#6c757d"
+    },
+    "fonts": { "heading": "Inter", "body": "Inter" },
+    "layout": "centered",
+    "hero_style": "minimal-text",
+    "card_style": "bordered",
+    "mood": ["clean", "professional", "spacious"]
+  },
+  {
+    "id": "warm-rustic",
+    "name": "Warm Rustic",
+    "colors": {
+      "primary": "#5c3d2e",
+      "secondary": "#8b5e3c",
+      "accent": "#d4a373",
+      "background": "#fefae0",
+      "surface": "#ffffff",
+      "text": "#3d2c22",
+      "text_muted": "#7a6b5d"
+    },
+    "fonts": { "heading": "Playfair Display", "body": "Lato" },
+    "layout": "wide",
+    "hero_style": "full-bleed",
+    "card_style": "flat-colored",
+    "mood": ["warm", "inviting", "authentic"]
+  },
+  {
+    "id": "bold-creative",
+    "name": "Bold Creative",
+    "colors": {
+      "primary": "#e63946",
+      "secondary": "#1d3557",
+      "accent": "#f77f00",
+      "background": "#f1faee",
+      "surface": "#ffffff",
+      "text": "#1d3557",
+      "text_muted": "#457b9d"
+    },
+    "fonts": { "heading": "Montserrat", "body": "Open Sans" },
+    "layout": "asymmetric",
+    "hero_style": "split-image",
+    "card_style": "elevated-shadow",
+    "mood": ["energetic", "bold", "dynamic"]
+  },
+  {
+    "id": "elegant-luxury",
+    "name": "Elegant Luxury",
+    "colors": {
+      "primary": "#2c2c2c",
+      "secondary": "#8b7355",
+      "accent": "#c9a84c",
+      "background": "#faf9f6",
+      "surface": "#ffffff",
+      "text": "#2c2c2c",
+      "text_muted": "#757575"
+    },
+    "fonts": { "heading": "Cormorant Garamond", "body": "Raleway" },
+    "layout": "centered",
+    "hero_style": "full-bleed",
+    "card_style": "glass-morphism",
+    "mood": ["luxurious", "refined", "exclusive"]
+  },
+  {
+    "id": "dark-tech",
+    "name": "Dark Tech",
+    "colors": {
+      "primary": "#0d1117",
+      "secondary": "#161b22",
+      "accent": "#58a6ff",
+      "background": "#0d1117",
+      "surface": "#161b22",
+      "text": "#e6edf3",
+      "text_muted": "#8b949e"
+    },
+    "fonts": { "heading": "Space Grotesk", "body": "IBM Plex Sans" },
+    "layout": "wide",
+    "hero_style": "gradient",
+    "card_style": "bordered",
+    "mood": ["futuristic", "technical", "sleek"]
+  },
+  {
+    "id": "gradient-future",
+    "name": "Gradient Future",
+    "colors": {
+      "primary": "#667eea",
+      "secondary": "#764ba2",
+      "accent": "#f093fb",
+      "background": "#fafbff",
+      "surface": "#ffffff",
+      "text": "#2d3748",
+      "text_muted": "#718096"
+    },
+    "fonts": { "heading": "Poppins", "body": "Nunito" },
+    "layout": "centered",
+    "hero_style": "gradient",
+    "card_style": "elevated-shadow",
+    "mood": ["innovative", "vibrant", "forward-thinking"]
+  },
+  {
+    "id": "ocean-calm",
+    "name": "Ocean Calm",
+    "colors": {
+      "primary": "#006d77",
+      "secondary": "#83c5be",
+      "accent": "#e29578",
+      "background": "#edf6f9",
+      "surface": "#ffffff",
+      "text": "#264653",
+      "text_muted": "#5f7a83"
+    },
+    "fonts": { "heading": "DM Sans", "body": "Source Sans Pro" },
+    "layout": "centered",
+    "hero_style": "split-image",
+    "card_style": "flat-colored",
+    "mood": ["calming", "trustworthy", "refreshing"]
+  },
+  {
+    "id": "earthy-organic",
+    "name": "Earthy Organic",
+    "colors": {
+      "primary": "#344e41",
+      "secondary": "#3a5a40",
+      "accent": "#a3b18a",
+      "background": "#f5f0eb",
+      "surface": "#ffffff",
+      "text": "#2d3a2e",
+      "text_muted": "#6b7c6e"
+    },
+    "fonts": { "heading": "Merriweather", "body": "Lato" },
+    "layout": "wide",
+    "hero_style": "full-bleed",
+    "card_style": "bordered",
+    "mood": ["natural", "sustainable", "grounded"]
+  },
+  {
+    "id": "sunset-warm",
+    "name": "Sunset Warm",
+    "colors": {
+      "primary": "#e07a5f",
+      "secondary": "#3d405b",
+      "accent": "#f2cc8f",
+      "background": "#fdf8f4",
+      "surface": "#ffffff",
+      "text": "#3d405b",
+      "text_muted": "#81838f"
+    },
+    "fonts": { "heading": "Josefin Sans", "body": "Work Sans" },
+    "layout": "asymmetric",
+    "hero_style": "split-image",
+    "card_style": "elevated-shadow",
+    "mood": ["warm", "friendly", "approachable"]
+  },
+  {
+    "id": "nordic-frost",
+    "name": "Nordic Frost",
+    "colors": {
+      "primary": "#2e4057",
+      "secondary": "#048a81",
+      "accent": "#54c6eb",
+      "background": "#f0f4f8",
+      "surface": "#ffffff",
+      "text": "#2e4057",
+      "text_muted": "#7b8a9e"
+    },
+    "fonts": { "heading": "Quicksand", "body": "Rubik" },
+    "layout": "centered",
+    "hero_style": "minimal-text",
+    "card_style": "glass-morphism",
+    "mood": ["crisp", "modern", "serene"]
+  },
+  {
+    "id": "royal-purple",
+    "name": "Royal Purple",
+    "colors": {
+      "primary": "#5b2c6f",
+      "secondary": "#7d3c98",
+      "accent": "#f4d35e",
+      "background": "#faf5ff",
+      "surface": "#ffffff",
+      "text": "#2c1338",
+      "text_muted": "#7b6b8a"
+    },
+    "fonts": { "heading": "Libre Baskerville", "body": "Karla" },
+    "layout": "centered",
+    "hero_style": "gradient",
+    "card_style": "elevated-shadow",
+    "mood": ["premium", "distinctive", "confident"]
+  },
+  {
+    "id": "coral-reef",
+    "name": "Coral Reef",
+    "colors": {
+      "primary": "#ff6b6b",
+      "secondary": "#ee5a24",
+      "accent": "#feca57",
+      "background": "#fff5f5",
+      "surface": "#ffffff",
+      "text": "#2d3436",
+      "text_muted": "#636e72"
+    },
+    "fonts": { "heading": "Archivo", "body": "Nunito Sans" },
+    "layout": "wide",
+    "hero_style": "split-image",
+    "card_style": "flat-colored",
+    "mood": ["vibrant", "playful", "energetic"]
+  },
+  {
+    "id": "midnight-blue",
+    "name": "Midnight Blue",
+    "colors": {
+      "primary": "#0c2461",
+      "secondary": "#1e3799",
+      "accent": "#4a69bd",
+      "background": "#f5f6fa",
+      "surface": "#ffffff",
+      "text": "#0c2461",
+      "text_muted": "#6c7b95"
+    },
+    "fonts": { "heading": "Roboto Slab", "body": "Roboto" },
+    "layout": "centered",
+    "hero_style": "full-bleed",
+    "card_style": "bordered",
+    "mood": ["authoritative", "reliable", "corporate"]
+  },
+  {
+    "id": "mint-fresh",
+    "name": "Mint Fresh",
+    "colors": {
+      "primary": "#00b894",
+      "secondary": "#00cec9",
+      "accent": "#fdcb6e",
+      "background": "#f0fffe",
+      "surface": "#ffffff",
+      "text": "#2d3436",
+      "text_muted": "#636e72"
+    },
+    "fonts": { "heading": "Outfit", "body": "Inter" },
+    "layout": "wide",
+    "hero_style": "gradient",
+    "card_style": "elevated-shadow",
+    "mood": ["fresh", "health-conscious", "clean"]
+  },
+  {
+    "id": "slate-professional",
+    "name": "Slate Professional",
+    "colors": {
+      "primary": "#334155",
+      "secondary": "#475569",
+      "accent": "#3b82f6",
+      "background": "#f8fafc",
+      "surface": "#ffffff",
+      "text": "#1e293b",
+      "text_muted": "#64748b"
+    },
+    "fonts": { "heading": "Plus Jakarta Sans", "body": "Inter" },
+    "layout": "centered",
+    "hero_style": "minimal-text",
+    "card_style": "bordered",
+    "mood": ["professional", "trustworthy", "systematic"]
+  },
+  {
+    "id": "terracotta-desert",
+    "name": "Terracotta Desert",
+    "colors": {
+      "primary": "#c2703e",
+      "secondary": "#a0522d",
+      "accent": "#e8c07d",
+      "background": "#fdf6ee",
+      "surface": "#ffffff",
+      "text": "#3e2723",
+      "text_muted": "#795548"
+    },
+    "fonts": { "heading": "Bitter", "body": "Cabin" },
+    "layout": "asymmetric",
+    "hero_style": "full-bleed",
+    "card_style": "flat-colored",
+    "mood": ["artisan", "handcrafted", "authentic"]
+  },
+  {
+    "id": "neon-electric",
+    "name": "Neon Electric",
+    "colors": {
+      "primary": "#0a0a0a",
+      "secondary": "#1a1a2e",
+      "accent": "#00f5d4",
+      "background": "#0a0a0a",
+      "surface": "#1a1a2e",
+      "text": "#eaeaea",
+      "text_muted": "#888888"
+    },
+    "fonts": { "heading": "Syne", "body": "Space Grotesk" },
+    "layout": "wide",
+    "hero_style": "gradient",
+    "card_style": "glass-morphism",
+    "mood": ["edgy", "modern", "electric"]
+  },
+  {
+    "id": "sage-wellness",
+    "name": "Sage Wellness",
+    "colors": {
+      "primary": "#606c38",
+      "secondary": "#283618",
+      "accent": "#dda15e",
+      "background": "#fefef5",
+      "surface": "#ffffff",
+      "text": "#283618",
+      "text_muted": "#606c38"
+    },
+    "fonts": { "heading": "Fraunces", "body": "Assistant" },
+    "layout": "centered",
+    "hero_style": "split-image",
+    "card_style": "flat-colored",
+    "mood": ["tranquil", "wellness", "mindful"]
+  },
+  {
+    "id": "cherry-blossom",
+    "name": "Cherry Blossom",
+    "colors": {
+      "primary": "#d63384",
+      "secondary": "#6f42c1",
+      "accent": "#ff9a9e",
+      "background": "#fff0f3",
+      "surface": "#ffffff",
+      "text": "#3c1642",
+      "text_muted": "#8c6b8a"
+    },
+    "fonts": { "heading": "Playfair Display", "body": "Mulish" },
+    "layout": "centered",
+    "hero_style": "gradient",
+    "card_style": "glass-morphism",
+    "mood": ["feminine", "elegant", "soft"]
+  },
+  {
+    "id": "industrial-raw",
+    "name": "Industrial Raw",
+    "colors": {
+      "primary": "#2d2d2d",
+      "secondary": "#4a4a4a",
+      "accent": "#ff5722",
+      "background": "#eeeeee",
+      "surface": "#f5f5f5",
+      "text": "#212121",
+      "text_muted": "#757575"
+    },
+    "fonts": { "heading": "Barlow Condensed", "body": "Barlow" },
+    "layout": "wide",
+    "hero_style": "minimal-text",
+    "card_style": "bordered",
+    "mood": ["raw", "strong", "industrial"]
+  },
+  {
+    "id": "tropical-paradise",
+    "name": "Tropical Paradise",
+    "colors": {
+      "primary": "#1b4332",
+      "secondary": "#2d6a4f",
+      "accent": "#ffb703",
+      "background": "#f4fdf4",
+      "surface": "#ffffff",
+      "text": "#1b4332",
+      "text_muted": "#52796f"
+    },
+    "fonts": { "heading": "Comfortaa", "body": "Nunito" },
+    "layout": "asymmetric",
+    "hero_style": "full-bleed",
+    "card_style": "elevated-shadow",
+    "mood": ["tropical", "lush", "vibrant"]
+  },
+  {
+    "id": "classic-navy",
+    "name": "Classic Navy",
+    "colors": {
+      "primary": "#003049",
+      "secondary": "#004e7c",
+      "accent": "#d62828",
+      "background": "#f7f9fc",
+      "surface": "#ffffff",
+      "text": "#003049",
+      "text_muted": "#5a7184"
+    },
+    "fonts": { "heading": "Crimson Pro", "body": "Source Sans Pro" },
+    "layout": "centered",
+    "hero_style": "split-image",
+    "card_style": "bordered",
+    "mood": ["classic", "established", "dependable"]
+  },
+  {
+    "id": "peach-cream",
+    "name": "Peach Cream",
+    "colors": {
+      "primary": "#c1666b",
+      "secondary": "#d4a373",
+      "accent": "#e8985e",
+      "background": "#fff8f0",
+      "surface": "#ffffff",
+      "text": "#4a3728",
+      "text_muted": "#8a7060"
+    },
+    "fonts": { "heading": "DM Serif Display", "body": "DM Sans" },
+    "layout": "centered",
+    "hero_style": "split-image",
+    "card_style": "elevated-shadow",
+    "mood": ["soft", "welcoming", "nurturing"]
+  },
+  {
+    "id": "carbon-fiber",
+    "name": "Carbon Fiber",
+    "colors": {
+      "primary": "#1a1a1a",
+      "secondary": "#333333",
+      "accent": "#00e676",
+      "background": "#121212",
+      "surface": "#1e1e1e",
+      "text": "#e0e0e0",
+      "text_muted": "#9e9e9e"
+    },
+    "fonts": { "heading": "Rajdhani", "body": "Exo 2" },
+    "layout": "wide",
+    "hero_style": "gradient",
+    "card_style": "glass-morphism",
+    "mood": ["performance", "precision", "cutting-edge"]
+  },
+  {
+    "id": "lavender-dream",
+    "name": "Lavender Dream",
+    "colors": {
+      "primary": "#7c3aed",
+      "secondary": "#8b5cf6",
+      "accent": "#a78bfa",
+      "background": "#f5f3ff",
+      "surface": "#ffffff",
+      "text": "#1e1b4b",
+      "text_muted": "#6b7280"
+    },
+    "fonts": { "heading": "Lexend", "body": "Inter" },
+    "layout": "centered",
+    "hero_style": "gradient",
+    "card_style": "elevated-shadow",
+    "mood": ["creative", "dreamy", "modern"]
+  },
+  {
+    "id": "forest-lodge",
+    "name": "Forest Lodge",
+    "colors": {
+      "primary": "#2c5530",
+      "secondary": "#4a7c59",
+      "accent": "#c9a227",
+      "background": "#f5f1eb",
+      "surface": "#faf8f5",
+      "text": "#1c3520",
+      "text_muted": "#5e7562"
+    },
+    "fonts": { "heading": "Vollkorn", "body": "Nunito Sans" },
+    "layout": "wide",
+    "hero_style": "full-bleed",
+    "card_style": "flat-colored",
+    "mood": ["rustic", "cozy", "nature-inspired"]
+  }
+]

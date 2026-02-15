@@ -1,0 +1,17 @@
+<div class="space-y-0.5">
+{% for line in lines %}
+  {% set parsed = none %}
+  {% try %}
+    {% set parsed = line | tojson %}
+  {% except %}
+  {% endtry %}
+
+  <div class="text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 px-2 py-0.5 rounded transition">
+    <span class="text-gray-600 select-none">{{ loop.index }}  </span>{{ line }}
+  </div>
+{% endfor %}
+
+{% if not lines %}
+  <div class="text-gray-600 p-4 text-center">No log entries yet.</div>
+{% endif %}
+</div>

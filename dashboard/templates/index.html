@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% set active = "overview" %}
+
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl">
+  <h2 class="text-2xl font-bold text-white mb-6">Dashboard Overview</h2>
+
+  <!-- Stats Cards (auto-refresh) -->
+  <div hx-get="/api/stats" hx-trigger="every 3s" hx-swap="innerHTML" id="stats-area">
+    {% include "partials/stats_cards.html" %}
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <a href="/upload"
+       class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-brand-500/50 transition group">
+      <div class="w-10 h-10 rounded-lg bg-brand-600/20 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+      </div>
+      <h3 class="font-semibold text-white group-hover:text-brand-400 transition">Upload Spreadsheet</h3>
+      <p class="text-sm text-gray-500 mt-1">Load business data from CSV or Excel</p>
+    </a>
+
+    <a href="/monitor"
+       class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-green-500/50 transition group">
+      <div class="w-10 h-10 rounded-lg bg-green-600/20 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      </div>
+      <h3 class="font-semibold text-white group-hover:text-green-400 transition">Monitor & Control</h3>
+      <p class="text-sm text-gray-500 mt-1">Launch builds and watch real-time progress</p>
+    </a>
+
+    <a href="/sites"
+       class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-amber-500/50 transition group">
+      <div class="w-10 h-10 rounded-lg bg-amber-600/20 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <h3 class="font-semibold text-white group-hover:text-amber-400 transition">Deployed Sites</h3>
+      <p class="text-sm text-gray-500 mt-1">View live URLs and GitHub repos</p>
+    </a>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="mt-8">
+    <h3 class="text-lg font-semibold text-white mb-4">Pipeline Status</h3>
+    <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      {% set progress = stats %}
+      {% if progress.businesses_loaded > 0 %}
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-sm text-gray-400">{{ progress.spreadsheet }} — {{ progress.businesses_loaded }} businesses loaded</span>
+          {% if progress.is_running %}
+            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Running</span>
+          {% else %}
+            <span class="text-xs bg-gray-700 text-gray-400 px-2 py-1 rounded-full">Idle</span>
+          {% endif %}
+        </div>
+        {% if progress.total > 0 %}
+          <div class="w-full bg-gray-800 rounded-full h-2 mb-2">
+            {% set pct = ((progress.complete / progress.total) * 100) if progress.total > 0 else 0 %}
+            <div class="bg-brand-500 h-2 rounded-full transition-all duration-500" style="width: {{ pct }}%"></div>
+          </div>
+          <p class="text-xs text-gray-500">{{ progress.complete }}/{{ progress.total }} complete</p>
+        {% endif %}
+      {% else %}
+        <p class="text-sm text-gray-500">No data loaded yet. <a href="/upload" class="text-brand-400 hover:underline">Upload a spreadsheet</a> to get started.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

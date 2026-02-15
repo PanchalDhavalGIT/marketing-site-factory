@@ -1,0 +1,63 @@
+{
+  "restaurant": ["warm-rustic", "sunset-warm", "terracotta-desert", "tropical-paradise", "coral-reef"],
+  "cafe": ["peach-cream", "earthy-organic", "warm-rustic", "cherry-blossom", "sage-wellness"],
+  "bakery": ["peach-cream", "cherry-blossom", "warm-rustic", "sunset-warm", "lavender-dream"],
+  "bar": ["neon-electric", "dark-tech", "industrial-raw", "midnight-blue", "carbon-fiber"],
+  "food_truck": ["bold-creative", "coral-reef", "tropical-paradise", "neon-electric", "sunset-warm"],
+
+  "tech": ["modern-minimal", "dark-tech", "gradient-future", "slate-professional", "carbon-fiber"],
+  "saas": ["gradient-future", "modern-minimal", "lavender-dream", "slate-professional", "nordic-frost"],
+  "startup": ["bold-creative", "gradient-future", "neon-electric", "lavender-dream", "coral-reef"],
+  "agency": ["modern-minimal", "bold-creative", "dark-tech", "industrial-raw", "midnight-blue"],
+
+  "healthcare": ["ocean-calm", "mint-fresh", "nordic-frost", "sage-wellness", "slate-professional"],
+  "dental": ["mint-fresh", "ocean-calm", "modern-minimal", "nordic-frost", "slate-professional"],
+  "wellness": ["sage-wellness", "earthy-organic", "ocean-calm", "cherry-blossom", "lavender-dream"],
+  "fitness": ["bold-creative", "carbon-fiber", "neon-electric", "industrial-raw", "coral-reef"],
+  "yoga": ["sage-wellness", "lavender-dream", "cherry-blossom", "ocean-calm", "peach-cream"],
+  "spa": ["cherry-blossom", "lavender-dream", "sage-wellness", "elegant-luxury", "peach-cream"],
+
+  "legal": ["midnight-blue", "classic-navy", "slate-professional", "modern-minimal", "elegant-luxury"],
+  "finance": ["slate-professional", "midnight-blue", "classic-navy", "modern-minimal", "nordic-frost"],
+  "accounting": ["slate-professional", "classic-navy", "modern-minimal", "midnight-blue", "nordic-frost"],
+  "consulting": ["modern-minimal", "slate-professional", "midnight-blue", "gradient-future", "classic-navy"],
+  "insurance": ["classic-navy", "slate-professional", "ocean-calm", "midnight-blue", "nordic-frost"],
+
+  "real_estate": ["elegant-luxury", "classic-navy", "modern-minimal", "sunset-warm", "slate-professional"],
+  "property_management": ["slate-professional", "modern-minimal", "classic-navy", "midnight-blue", "nordic-frost"],
+  "interior_design": ["elegant-luxury", "cherry-blossom", "peach-cream", "modern-minimal", "lavender-dream"],
+
+  "construction": ["industrial-raw", "slate-professional", "classic-navy", "carbon-fiber", "bold-creative"],
+  "plumbing": ["ocean-calm", "slate-professional", "classic-navy", "mint-fresh", "bold-creative"],
+  "electrical": ["bold-creative", "neon-electric", "slate-professional", "carbon-fiber", "midnight-blue"],
+  "hvac": ["nordic-frost", "ocean-calm", "slate-professional", "modern-minimal", "mint-fresh"],
+  "landscaping": ["earthy-organic", "forest-lodge", "tropical-paradise", "sage-wellness", "mint-fresh"],
+  "roofing": ["industrial-raw", "slate-professional", "classic-navy", "bold-creative", "midnight-blue"],
+
+  "salon": ["cherry-blossom", "elegant-luxury", "peach-cream", "lavender-dream", "coral-reef"],
+  "barbershop": ["industrial-raw", "dark-tech", "carbon-fiber", "bold-creative", "midnight-blue"],
+  "beauty": ["cherry-blossom", "lavender-dream", "elegant-luxury", "peach-cream", "coral-reef"],
+
+  "education": ["gradient-future", "ocean-calm", "modern-minimal", "lavender-dream", "bold-creative"],
+  "tutoring": ["ocean-calm", "modern-minimal", "gradient-future", "lavender-dream", "mint-fresh"],
+
+  "retail": ["bold-creative", "coral-reef", "sunset-warm", "tropical-paradise", "cherry-blossom"],
+  "ecommerce": ["modern-minimal", "gradient-future", "bold-creative", "lavender-dream", "neon-electric"],
+  "fashion": ["elegant-luxury", "cherry-blossom", "neon-electric", "dark-tech", "modern-minimal"],
+  "jewelry": ["elegant-luxury", "royal-purple", "cherry-blossom", "peach-cream", "lavender-dream"],
+
+  "automotive": ["carbon-fiber", "industrial-raw", "dark-tech", "bold-creative", "midnight-blue"],
+  "car_wash": ["ocean-calm", "mint-fresh", "bold-creative", "coral-reef", "gradient-future"],
+
+  "photography": ["dark-tech", "modern-minimal", "elegant-luxury", "industrial-raw", "neon-electric"],
+  "wedding": ["cherry-blossom", "elegant-luxury", "peach-cream", "lavender-dream", "royal-purple"],
+  "event_planning": ["royal-purple", "coral-reef", "bold-creative", "gradient-future", "cherry-blossom"],
+
+  "pet_services": ["mint-fresh", "coral-reef", "bold-creative", "tropical-paradise", "sunset-warm"],
+  "veterinary": ["ocean-calm", "mint-fresh", "sage-wellness", "earthy-organic", "nordic-frost"],
+
+  "cleaning": ["mint-fresh", "ocean-calm", "modern-minimal", "nordic-frost", "slate-professional"],
+  "moving": ["bold-creative", "slate-professional", "industrial-raw", "classic-navy", "ocean-calm"],
+
+  "default": ["modern-minimal", "slate-professional", "bold-creative", "ocean-calm", "gradient-future"]
+}

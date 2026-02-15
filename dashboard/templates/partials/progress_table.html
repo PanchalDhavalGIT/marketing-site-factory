@@ -1,0 +1,122 @@
+{% if progress %}
+<!-- Published Sites Banner -->
+{% set has_published = [] %}
+{% for slug, data in progress.items() %}
+  {% if data.status == 'complete' and data.pages_url %}
+    {% if has_published.append(1) %}{% endif %}
+  {% endif %}
+{% endfor %}
+{% if has_published %}
+<div class="mb-4 bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+  <h4 class="text-green-400 font-semibold text-sm mb-2 flex items-center gap-2">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    Published Sites
+  </h4>
+  <div class="space-y-2">
+    {% for slug, data in progress.items() %}
+      {% if data.status == 'complete' and data.pages_url %}
+      <div class="flex items-center justify-between bg-gray-900/50 rounded-lg px-3 py-2">
+        <span class="text-white text-sm font-medium">{{ data.business_name or slug }}</span>
+        <div class="flex items-center gap-3">
+          <a href="{{ data.pages_url }}" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-1.5 text-green-400 hover:text-green-300 text-sm font-mono transition">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            {{ data.pages_url }}
+          </a>
+          {% if data.github_url %}
+          <a href="{{ data.github_url }}" target="_blank" rel="noopener"
+             class="text-gray-500 hover:text-gray-300 text-xs transition">repo</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-800/50">
+        <tr>
+          <th class="px-4 py-3 text-left text-gray-400 font-medium">Business</th>
+          <th class="px-4 py-3 text-left text-gray-400 font-medium">Status</th>
+          <th class="px-4 py-3 text-left text-gray-400 font-medium">Phase</th>
+          <th class="px-4 py-3 text-left text-gray-400 font-medium">Retries</th>
+          <th class="px-4 py-3 text-left text-gray-400 font-medium">Published URL</th>
+          <th class="px-4 py-3 text-right text-gray-400 font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-800">
+        {% for slug, data in progress.items() %}
+        <tr class="hover:bg-gray-800/30">
+          <td class="px-4 py-3">
+            <div class="text-white font-medium">{{ data.business_name or slug }}</div>
+            <div class="text-xs text-gray-500 font-mono">{{ slug }}</div>
+          </td>
+          <td class="px-4 py-3">
+            {% if data.status == 'complete' %}
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-green-500/20 text-green-400 rounded text-xs">
+                <span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span>Complete
+              </span>
+            {% elif data.status == 'building' %}
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded text-xs">
+                <span class="w-1.5 h-1.5 bg-yellow-400 rounded-full pulse-dot"></span>Building
+              </span>
+            {% elif data.status == 'failed' %}
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-red-500/20 text-red-400 rounded text-xs">
+                <span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span>Failed
+              </span>
+            {% elif data.status == 'queued' %}
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-500/20 text-gray-400 rounded text-xs">
+                <span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>Queued
+              </span>
+            {% elif data.status == 'retrying' %}
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded text-xs">
+                <span class="w-1.5 h-1.5 bg-amber-400 rounded-full pulse-dot"></span>Retrying
+              </span>
+            {% else %}
+              <span class="text-xs text-gray-500">{{ data.status }}</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3 text-gray-400 text-xs font-mono">{{ data.phase or '—' }}</td>
+          <td class="px-4 py-3 text-gray-400">{{ data.retries or 0 }}</td>
+          <td class="px-4 py-3">
+            {% if data.pages_url %}
+              <a href="{{ data.pages_url }}" target="_blank" rel="noopener"
+                 class="text-green-400 hover:text-green-300 text-xs font-mono truncate block max-w-xs">{{ data.pages_url }}</a>
+              {% if data.github_url %}
+              <a href="{{ data.github_url }}" target="_blank" rel="noopener"
+                 class="text-gray-500 hover:text-gray-400 text-xs mt-0.5 block">GitHub Repo</a>
+              {% endif %}
+            {% elif data.github_url %}
+              <a href="{{ data.github_url }}" target="_blank" rel="noopener"
+                 class="text-brand-400 hover:text-brand-300 text-xs font-mono truncate block max-w-xs">{{ data.github_url }}</a>
+              <span class="text-gray-600 text-xs mt-0.5 block">Pages deploying...</span>
+            {% elif data.status == 'complete' %}
+              <span class="text-gray-500 text-xs">Deployed — URL pending</span>
+            {% else %}
+              <span class="text-gray-600">—</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3 text-right">
+            {% if data.status == 'failed' %}
+              <button hx-post="/api/retry/{{ slug }}" hx-target="#progress-area"
+                      class="text-xs text-amber-400 hover:text-amber-300 transition">
+                Retry
+              </button>
+            {% endif %}
+            <a href="/logs/{{ slug }}" class="text-xs text-gray-500 hover:text-gray-300 ml-2">Logs</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
+  <p class="text-gray-500 text-sm">No builds started yet. Use the controls above to launch a batch.</p>
+</div>
+{% endif %}

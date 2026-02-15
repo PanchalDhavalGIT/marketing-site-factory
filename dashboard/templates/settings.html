@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% set active = "settings" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+  <h2 class="text-2xl font-bold text-white mb-2">Settings</h2>
+  <p class="text-gray-500 text-sm mb-8">Configure credentials, concurrency, and pipeline behavior</p>
+
+  <!-- Environment Status -->
+  <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-6">
+    <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Environment Status</h3>
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          {% if settings.claude_cli %}
+            <span class="w-2.5 h-2.5 bg-green-400 rounded-full"></span>
+          {% else %}
+            <span class="w-2.5 h-2.5 bg-red-400 rounded-full"></span>
+          {% endif %}
+          <span class="text-sm text-gray-300">Claude Code CLI</span>
+        </div>
+        <span class="text-xs text-gray-500">
+          {% if settings.claude_cli %}Authenticated (local){% else %}Not found — install from <code class="text-red-400">claude.ai/code</code>{% endif %}
+        </span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          {% if settings.github_token %}
+            <span class="w-2.5 h-2.5 bg-green-400 rounded-full"></span>
+          {% else %}
+            <span class="w-2.5 h-2.5 bg-red-400 rounded-full"></span>
+          {% endif %}
+          <span class="text-sm text-gray-300">GITHUB_TOKEN</span>
+        </div>
+        <span class="text-xs text-gray-500">
+          {% if settings.github_token %}Set{% else %}Missing — <code class="text-red-400">export GITHUB_TOKEN=...</code>{% endif %}
+        </span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          {% if settings.github_auth %}
+            <span class="w-2.5 h-2.5 bg-green-400 rounded-full"></span>
+          {% else %}
+            <span class="w-2.5 h-2.5 bg-yellow-400 rounded-full"></span>
+          {% endif %}
+          <span class="text-sm text-gray-300">GitHub CLI Auth</span>
+        </div>
+        <span class="text-xs text-gray-500">
+          {% if settings.github_auth %}Authenticated{% else %}Run <code class="text-yellow-400">gh auth login</code>{% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Runtime Settings -->
+  <form hx-post="/api/settings" hx-target="#settings-result"
+        class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-6">
+    <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Runtime Settings</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">Default Concurrency</label>
+        <input type="number" name="concurrency" value="{{ settings.concurrency }}" min="1" max="10"
+               class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:border-brand-500 focus:outline-none" />
+        <p class="text-xs text-gray-600 mt-1">Max parallel builds (1-10)</p>
+      </div>
+
+      <div>
+        <label class="block text-sm text-gray-400 mb-1">Session Timeout (sec)</label>
+        <input type="number" name="timeout" value="{{ settings.session_timeout }}" min="300" max="7200" step="60"
+               class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:border-brand-500 focus:outline-none" />
+        <p class="text-xs text-gray-600 mt-1">Max time per site build</p>
+      </div>
+    </div>
+
+    <div class="mt-4 flex items-center gap-3">
+      <button type="submit"
+              class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium transition">
+        Save Settings
+      </button>
+      <div id="settings-result"></div>
+    </div>
+  </form>
+
+  <!-- Danger Zone -->
+  <div class="bg-gray-900 border border-red-900/50 rounded-xl p-6">
+    <h3 class="text-sm font-semibold text-red-400 uppercase tracking-wider mb-4">Maintenance</h3>
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-300">Clear Progress Data</p>
+          <p class="text-xs text-gray-600">Reset all build tracking. Does not affect deployed sites.</p>
+        </div>
+        <button hx-post="/api/clear/progress" hx-target="#clear-progress-result" hx-confirm="Clear all progress data?"
+                class="px-4 py-1.5 border border-gray-700 text-gray-400 hover:border-red-500 hover:text-red-400 rounded-lg text-sm transition">
+          Clear
+        </button>
+      </div>
+      <div id="clear-progress-result"></div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-gray-800">
+        <div>
+          <p class="text-sm text-gray-300">Clear Workspaces</p>
+          <p class="text-xs text-gray-600">Delete all workspace directories. Free disk space after builds.</p>
+        </div>
+        <button hx-post="/api/clear/workspaces" hx-target="#clear-workspaces-result" hx-confirm="Delete all workspace files?"
+                class="px-4 py-1.5 border border-gray-700 text-gray-400 hover:border-red-500 hover:text-red-400 rounded-lg text-sm transition">
+          Clear
+        </button>
+      </div>
+      <div id="clear-workspaces-result"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
