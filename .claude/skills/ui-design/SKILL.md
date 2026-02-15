@@ -1,63 +1,87 @@
 ---
 name: ui-design
-description: Design UI components and visual layout for marketing site pages using Tailwind CSS. Uses brand.json for styling decisions.
+description: Design ultra-modern, Awwwards-quality UI using Tailwind CSS. Uses brand.json + UI/UX Pro Max design system for styling decisions.
 ---
 
-# UI Design System
+# UI Design System — Awwwards Quality
 
-Design the visual component layer for a multi-page marketing site using Tailwind CSS.
+Design the visual component layer for a multi-page marketing site using Tailwind CSS. The goal is an ultra-modern, clean, sleek website that looks like it belongs on Awwwards.
+
+## Step 1: Generate Design System (REQUIRED)
+
+Before any design decisions, run the UI/UX Pro Max design system generator:
+```bash
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<industry> <keywords>" --design-system -p "<Project Name>"
+```
+
+Then get stack-specific guidelines:
+```bash
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py "layout responsive animation" --stack html-tailwind
+```
 
 ## Input
 
+- Design system output from Step 1
 - `brand.json` — color palette, fonts, mood, spacing
 - `sitemap.json` — page structure and content zones
-- `design-spec.json` — if already created by ui-designer agent
 
-## Component Library
+## Awwwards Design Standards
 
-Design these component types using Tailwind utility classes:
+### Visual Quality
+- Floating glass navbar: `backdrop-blur-xl bg-white/80` with subtle border
+- Smooth scroll behavior: `scroll-smooth` on html element
+- Generous section padding: py-20 to py-32, large gaps between sections
+- Hero: large bold typography (text-5xl to text-7xl), gradient text or accent highlights
+- Cards: subtle shadows, rounded-2xl to rounded-3xl, hover:shadow-xl transitions
+- Gradient accents: subtle gradients on backgrounds, buttons, or text highlights
+- Whitespace: generous — let the design breathe
+- Typography: clear hierarchy (base → lg → 2xl → 4xl → 6xl)
+- Container: max-w-7xl mx-auto with px-4 to px-6
 
-### Hero Sections (pick ONE per site — variety is critical)
-- **Split hero**: Image left/right + text opposite side
-- **Full-bleed hero**: Background image with overlay text
-- **Gradient hero**: Animated gradient background with centered text
-- **Video hero**: Background video placeholder with overlay
-- **Minimal hero**: Large typography, no image, bold statement
+### Micro-Animations
+- hover:scale-[1.02] on cards and buttons
+- hover:-translate-y-1 on cards for lift effect
+- transition-all duration-300 on all interactive elements
+- Smooth color transitions on hover states (150-300ms)
 
-### Feature/Service Sections
-- **Card grid**: 3-column cards with icons
-- **Alternating rows**: Image + text alternating sides
-- **Icon list**: Vertical list with descriptive icons
-- **Tabbed features**: Tab-based feature showcase
+### Component Library
 
-### Social Proof
-- **Testimonial carousel**: Rotating quotes
-- **Review cards**: Grid of customer review cards
-- **Stats bar**: Key numbers in a horizontal bar
-- **Logo wall**: Client/partner logos
+#### Hero Sections (pick ONE — make it stunning)
+- **Gradient hero**: Animated gradient background, oversized typography, floating glass CTA
+- **Split hero**: Image with rounded corners + text, subtle parallax feel
+- **Full-bleed hero**: Background with gradient overlay, centered bold text
+- **Minimal hero**: Massive typography, no image, bold statement with accent color
 
-### CTA Sections
-- **Banner CTA**: Full-width colored banner
-- **Card CTA**: Centered card with action
-- **Floating CTA**: Sticky bottom bar on mobile
+#### Feature/Service Sections
+- **Card grid**: 3-column cards with SVG icons, hover lift + shadow
+- **Bento grid**: Modern bento-style asymmetric grid layout
+- **Alternating rows**: Image + text alternating sides with scroll reveal feel
 
-### Navigation
-- **Classic navbar**: Logo left, links right, CTA button
-- **Centered navbar**: Logo center, links split
-- **Hamburger**: Mobile-first with slide-out menu
+#### Social Proof
+- **Testimonial cards**: Glass-effect cards with avatar, quote, rating
+- **Stats counter**: Animated numbers in a horizontal bar
+- **Logo wall**: Grayscale → color on hover client logos
 
-### Footer
-- **4-column footer**: Links organized by category
-- **Simple footer**: Single row with essentials
-- **CTA footer**: Newsletter signup + links
+#### CTA Sections
+- **Gradient CTA**: Full-width gradient banner with glass button
+- **Card CTA**: Floating centered card with rounded corners and shadow
+
+#### Navigation
+- **Floating glass navbar**: Sticky, top-4 inset, backdrop-blur-xl, rounded-2xl, shadow-lg
+- Mobile: hamburger with smooth slide-in menu
+
+#### Footer
+- **Modern footer**: Multi-column with social links, newsletter input, subtle top border
 
 ## Rules
 
-- Map all colors to Tailwind config via `brand.json` values
-- Use `tailwind.config.js` extend section for custom colors/fonts
-- Mobile-first: design for 375px, then scale up
-- Minimum touch target: 44x44px for interactive elements
-- Consistent spacing: use the brand's spacing scale throughout
-- Every section needs vertical padding of at least `py-16` (desktop) / `py-12` (mobile)
-- Images use `next/image` with proper width/height/alt
+- NEVER use emojis as icons — use inline SVGs only (Heroicons/Lucide style)
+- cursor-pointer on ALL clickable/hoverable elements
+- Color contrast: 4.5:1 minimum ratio (accessibility)
+- Touch targets: minimum 44x44px
+- Mobile-first: design for 375px, 768px, 1024px, 1440px
+- All transitions: 150-300ms duration
+- Line height: 1.5-1.75 for body text
+- Line length: max 65-75 characters per line
+- prefers-reduced-motion: respect this media query
 - NEVER use inline styles — Tailwind utilities only

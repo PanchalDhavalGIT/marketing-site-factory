@@ -270,7 +270,7 @@ def build_pm_prompt(business_data: dict, theme: dict) -> str:
     hero_style = theme.get("hero_style", "centered")
     mood = theme.get("mood", [])
 
-    prompt = f"""You are a full-stack web developer. Your job is to build and deploy a COMPLETE multi-page marketing website for a real business. You must execute ALL phases below — do NOT stop early, do NOT just plan. Actually build everything.
+    prompt = f"""You are an elite full-stack web developer who builds Awwwards-quality websites. Your job is to build and deploy a COMPLETE multi-page marketing website that looks ultra-modern, clean, and sleek — the kind that wins design awards. You must execute ALL phases below — do NOT stop early, do NOT just plan. Actually build everything.
 
 ## Business Data
 - Name: {name}
@@ -294,35 +294,50 @@ Full data is also in brief.json in this directory.
 
 ## EXECUTE THESE PHASES IN ORDER
 
-### Phase 1: Research (write research.json)
+### Phase 1: Design System Generation (REQUIRED FIRST STEP)
+Run the UI/UX Pro Max design system generator to get expert design recommendations:
+```bash
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py "{industry} {' '.join(mood) if isinstance(mood, list) else mood}" --design-system -p "{name}"
+```
+Read the output carefully — it will give you: recommended pattern, style, color palette, typography, key effects, and anti-patterns to avoid.
+
+Then get stack-specific guidelines:
+```bash
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py "layout responsive animation" --stack html-tailwind
+```
+
+Use these recommendations to inform ALL subsequent design decisions.
+
+### Phase 2: Research (write research.json)
 Use WebSearch to research the {industry} industry. Find:
 - Target audience demographics and pain points
 - Key selling points for this type of business
 - Common competitor website features
 - Industry-specific trust signals
+Also search for "best {industry} website design awwwards" for design inspiration.
 Write findings to research.json.
 
-### Phase 2: Brand Identity (write brand.json)
-Based on the theme above and research, create brand.json with:
-- Finalized color palette (use theme colors as base)
-- Typography choices (use theme fonts)
+### Phase 3: Brand Identity (write brand.json)
+Combine the theme colors + design system output to create brand.json with:
+- Finalized color palette (primary, secondary, accent, background, text, muted)
+- Typography choices (heading + body fonts with Google Fonts import URL)
 - Brand voice and tone description
-- Logo style recommendation
+- Visual style: glassmorphism / gradient / minimal / etc. from design system output
 
-### Phase 3: Site Architecture (write sitemap.json)
-Design the site structure — write sitemap.json with pages:
-- Home: hero, features/services, testimonials, CTA
-- About: story, team, values, history
-- Services: individual service cards with descriptions
+### Phase 4: Site Architecture (write sitemap.json)
+Design the site structure following the design system's recommended pattern:
+- Home: hero, features/services, testimonials, stats bar, CTA
+- About: story, team, values, timeline
+- Services: individual service cards with rich descriptions
 - Contact: form, map placeholder, business info
 - Blog: 2-3 sample blog post outlines
 Include navigation structure and CTA placement strategy.
 
-### Phase 4: Copywriting (write content.json)
+### Phase 5: Copywriting (write content.json)
 Write ALL page content — headlines, body copy, CTAs, service descriptions, about narrative, testimonials (realistic placeholder), meta descriptions. Write to content.json. Make it compelling, unique, and {industry}-appropriate.
 
-### Phase 5: Build the Next.js Site
-This is the MAIN phase. Build a complete, production-ready site:
+### Phase 6: Build the Next.js Site — AWWWARDS QUALITY
+This is the MAIN phase. Build a site that looks like it belongs on Awwwards.
 
 1. Scaffold: `npx create-next-app@latest . --typescript --tailwind --app --src-dir --no-eslint --import-alias "@/*" --yes`
 
@@ -336,26 +351,43 @@ const nextConfig = {{
 export default nextConfig;
 ```
 
-3. Update tailwind.config.ts with brand colors and Google Fonts
+3. Update tailwind.config.ts with brand colors, fonts, custom animations, and extended theme
 
-4. Build ALL pages and components:
-   - src/app/layout.tsx — root layout with Google Fonts ({fonts.get('heading', 'Inter')}, {fonts.get('body', 'Source Sans Pro')}), navigation, footer
-   - src/app/page.tsx — Home page with hero, services preview, testimonials, CTA
-   - src/app/about/page.tsx — About page
-   - src/app/services/page.tsx — Services page
-   - src/app/contact/page.tsx — Contact page with form
-   - src/app/blog/page.tsx — Blog listing
-   - Shared components: Header, Footer, CTAButton, ServiceCard, TestimonialCard, SectionWrapper
+4. Build ALL pages and components with PREMIUM design quality:
+   - src/app/layout.tsx — root layout with Google Fonts ({fonts.get('heading', 'Inter')}, {fonts.get('body', 'Source Sans Pro')}), smooth scroll
+   - src/app/page.tsx — Home: stunning hero with gradient/glass effects, animated sections, services grid, testimonials, stats counter, CTA
+   - src/app/about/page.tsx — About: story with timeline, values with icons, team section
+   - src/app/services/page.tsx — Services: beautiful cards with hover effects, individual service detail
+   - src/app/contact/page.tsx — Contact: modern form with validation, business info sidebar
+   - src/app/blog/page.tsx — Blog: clean card grid with hover animations
+   - Shared components: Header (floating glass navbar with blur), Footer (modern multi-column), CTAButton (with hover animation), ServiceCard (with hover lift + shadow), TestimonialCard, SectionWrapper, StatsCounter
 
-5. Add SEO to layout.tsx: metadata export with title, description, Open Graph, Twitter cards
+5. DESIGN EXCELLENCE REQUIREMENTS (Awwwards-level):
+   - Floating glass navbar: `backdrop-blur-xl bg-white/80 dark:bg-gray-900/80` with subtle border
+   - Smooth scroll behavior: `scroll-smooth` on html
+   - Section transitions: generous padding (py-20 to py-32), large gaps between sections
+   - Hero: large bold typography (text-5xl to text-7xl), gradient text or accent highlights
+   - Cards: subtle shadows, rounded-2xl to rounded-3xl corners, hover:shadow-xl transitions
+   - Micro-animations: hover:scale-[1.02], hover:-translate-y-1, transition-all duration-300
+   - Color contrast: 4.5:1 minimum ratio for accessibility
+   - Touch targets: minimum 44x44px for all interactive elements
+   - SVG icons only (Heroicons/Lucide style inline SVGs) — NEVER use emojis as icons
+   - cursor-pointer on ALL clickable elements
+   - Gradient accents: subtle gradients on backgrounds, buttons, or text
+   - Whitespace: generous use of whitespace — let the design breathe
+   - Typography scale: clear hierarchy with font-size jumps (base → lg → 2xl → 4xl → 6xl)
+   - Container max-width: max-w-7xl mx-auto with px-4 to px-6 padding
+   - Mobile-first: all layouts work perfectly at 375px, 768px, 1024px, 1440px
 
-6. Create public/robots.txt and public/sitemap.xml
+6. Add SEO to layout.tsx: metadata export with title, description, Open Graph, Twitter cards
 
-7. Verify build succeeds: `npm run build`
+7. Create public/robots.txt and public/sitemap.xml
+
+8. Verify build succeeds: `npm run build`
    - The build MUST produce an `out/` directory (static export)
    - If build fails, fix errors and rebuild
 
-### Phase 6: Deploy to GitHub Pages
+### Phase 7: Deploy to GitHub Pages
 After successful build:
 
 1. Initialize git and push:
@@ -417,7 +449,7 @@ gh api repos/OWNER/marketing-{slug}/pages -X POST -f build_type=workflow 2>/dev/
 ```
 (Get OWNER from: `gh api user --jq '.login'`)
 
-### Phase 7: Write Final Report
+### Phase 8: Write Final Report
 Write status.json:
 ```json
 {{
@@ -426,7 +458,7 @@ Write status.json:
   "status": "complete",
   "github_url": "https://github.com/OWNER/marketing-{slug}",
   "pages_url": "https://OWNER.github.io/marketing-{slug}/",
-  "phases_completed": 7
+  "phases_completed": 8
 }}
 ```
 
@@ -440,6 +472,11 @@ Also write deploy-result.json with the same github_url and pages_url.
 - next.config.mjs MUST have `output: 'export'` and `images: {{ unoptimized: true }}`.
 - Use ONLY Tailwind CSS for styling. No external UI libraries.
 - All pages must be statically exportable (no API routes, no server components with dynamic data).
-- Write status.json and deploy-result.json at the end with real URLs."""
+- Write status.json and deploy-result.json at the end with real URLs.
+- NEVER use emojis as icons — use inline SVGs only (Heroicons/Lucide style).
+- The site MUST look ultra-modern, clean, and sleek — Awwwards quality.
+- Use glassmorphism, gradients, smooth animations, generous whitespace.
+- Every hover state must have a smooth transition (150-300ms).
+- Typography must have clear hierarchy with proper line-height (1.5-1.75 for body)."""
 
     return prompt
