@@ -1,5 +1,6 @@
 """Configuration constants and environment variable handling."""
 
+import json
 import os
 from pathlib import Path
 
@@ -36,8 +37,24 @@ CLAUDE_CMD = "claude"
 CLAUDE_MAX_TURNS = 200
 CLAUDE_OUTPUT_FORMAT = "json"
 
-# Environment variables
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+# Environment variables — check shell env first, fall back to .claude/settings.local.json
+def _load_github_token() -> str:
+    token = os.environ.get("GITHUB_TOKEN", "")
+    if token:
+        return token
+    settings_file = CLAUDE_DIR / "settings.local.json"
+    if settings_file.exists():
+        try:
+            with open(settings_file) as f:
+                data = json.load(f)
+            token = data.get("env", {}).get("GITHUB_TOKEN", "")
+            if token:
+                os.environ["GITHUB_TOKEN"] = token
+        except (json.JSONDecodeError, OSError):
+            pass
+    return token
+
+GITHUB_TOKEN = _load_github_token()
 
 # Required spreadsheet columns
 REQUIRED_COLUMNS = [
