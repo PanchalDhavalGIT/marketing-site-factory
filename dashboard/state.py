@@ -169,12 +169,43 @@ class DashboardState:
         return logs
 
     def read_log(self, slug: str, tail: int = 100) -> list[str]:
-        """Read the last N lines of a site log."""
+        """Read the last N lines of a site log. Prefers live log if available."""
+        # Try live log first (real-time streaming output)
+        live_log = LOGS_DIR / f"{slug}.live.log"
+        if live_log.exists() and live_log.stat().st_size > 0:
+            lines = live_log.read_text().strip().split("\n")
+            return lines[-tail:]
+
+        # Fall back to structured log
         log_file = LOGS_DIR / f"{slug}.log"
         if not log_file.exists():
             return [f"No log file found for '{slug}'"]
         lines = log_file.read_text().strip().split("\n")
         return lines[-tail:]
+
+    def get_live_activity(self) -> list[dict]:
+        """Get recent activity across all building sites for the live feed."""
+        progress = self.get_progress()
+        activity = []
+        for slug, data in progress.items():
+            if data.get("status") in ("building", "retrying"):
+                # Read last few lines from live log
+                live_log = LOGS_DIR / f"{slug}.live.log"
+                last_line = ""
+                if live_log.exists():
+                    try:
+                        lines = live_log.read_text().strip().split("\n")
+                        last_line = lines[-1] if lines else ""
+                    except Exception:
+                        pass
+                activity.append({
+                    "slug": slug,
+                    "business_name": data.get("business_name", slug),
+                    "phase": data.get("phase", ""),
+                    "started_at": data.get("started_at", ""),
+                    "last_output": last_line,
+                })
+        return activity
 
     # ── Deployed Sites ───────────────────────────────────────────
 

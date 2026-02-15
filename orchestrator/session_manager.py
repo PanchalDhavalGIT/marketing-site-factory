@@ -3,6 +3,7 @@
 import asyncio
 import json
 import os
+import time
 from pathlib import Path
 
 from orchestrator.config import (
@@ -10,6 +11,7 @@ from orchestrator.config import (
     CLAUDE_MAX_TURNS,
     CLAUDE_OUTPUT_FORMAT,
     DEFAULT_SESSION_TIMEOUT,
+    LOGS_DIR,
 )
 from orchestrator.logger import get_site_logger
 
@@ -35,20 +37,24 @@ async def launch_session(
     prompt: str,
     timeout: int = DEFAULT_SESSION_TIMEOUT,
     site_slug: str = "",
+    progress_callback=None,
 ) -> SessionResult:
     """
     Launch a Claude Code CLI session in the given workspace.
+    Streams stdout to log file in real-time for dashboard visibility.
 
     Args:
         workspace: Path to the isolated workspace directory.
         prompt: The prompt to send to Claude Code.
         timeout: Maximum seconds before killing the session.
         site_slug: For logging purposes.
+        progress_callback: async callable(slug, phase_msg) for live updates.
 
     Returns:
         SessionResult with success/failure and output.
     """
     logger = get_site_logger(site_slug or workspace.name)
+    slug = site_slug or workspace.name
 
     cmd = [
         CLAUDE_CMD,
@@ -60,11 +66,13 @@ async def launch_session(
     ]
 
     env = os.environ.copy()
-    # Ensure workspace has access to necessary tools
     env["HOME"] = os.environ.get("HOME", "")
 
     logger.info(f"Launching Claude session in {workspace}")
-    logger.debug(f"Command: {' '.join(cmd)}")
+
+    # Prepare live log file for streaming
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    live_log = LOGS_DIR / f"{slug}.live.log"
 
     try:
         process = await asyncio.create_subprocess_exec(
@@ -75,12 +83,49 @@ async def launch_session(
             env=env,
         )
 
+        stdout_lines = []
+        stderr_lines = []
+        start_time = time.time()
+
+        async def read_stream(stream, collector, is_stderr=False):
+            """Read stream line-by-line and write to log in real-time."""
+            while True:
+                line = await stream.readline()
+                if not line:
+                    break
+                decoded = line.decode("utf-8", errors="replace").rstrip()
+                collector.append(decoded)
+
+                # Write to live log file for dashboard
+                with open(live_log, "a") as f:
+                    elapsed = int(time.time() - start_time)
+                    prefix = "ERR" if is_stderr else "OUT"
+                    f.write(f"[{elapsed:>4}s] [{prefix}] {decoded}\n")
+
+                # Log to structured log
+                if is_stderr:
+                    logger.warning(f"stderr: {decoded[:300]}")
+                else:
+                    logger.info(f"stdout: {decoded[:300]}")
+
+                # Detect phase changes from output and fire callback
+                if progress_callback and not is_stderr:
+                    phase = _detect_phase(decoded)
+                    if phase:
+                        await progress_callback(slug, phase)
+
         try:
-            stdout_bytes, stderr_bytes = await asyncio.wait_for(
-                process.communicate(), timeout=timeout
+            await asyncio.wait_for(
+                asyncio.gather(
+                    read_stream(process.stdout, stdout_lines),
+                    read_stream(process.stderr, stderr_lines, is_stderr=True),
+                    process.wait(),
+                ),
+                timeout=timeout,
             )
         except asyncio.TimeoutError:
-            logger.warning(f"Session timed out after {timeout}s — killing process")
+            elapsed = int(time.time() - start_time)
+            logger.warning(f"Session timed out after {elapsed}s — killing process")
             process.kill()
             await process.wait()
             return SessionResult(
@@ -89,14 +134,15 @@ async def launch_session(
                 timed_out=True,
             )
 
-        stdout = stdout_bytes.decode("utf-8", errors="replace")
-        stderr = stderr_bytes.decode("utf-8", errors="replace")
+        stdout = "\n".join(stdout_lines)
+        stderr = "\n".join(stderr_lines)
+        elapsed = int(time.time() - start_time)
 
         if process.returncode == 0:
-            logger.info("Session completed successfully")
+            logger.info(f"Session completed successfully in {elapsed}s")
             return SessionResult(success=True, output=stdout)
         else:
-            logger.error(f"Session failed (exit code {process.returncode}): {stderr[:500]}")
+            logger.error(f"Session failed (exit {process.returncode}) after {elapsed}s: {stderr[:500]}")
             return SessionResult(
                 success=False,
                 output=stdout,
@@ -111,6 +157,42 @@ async def launch_session(
         error = f"Unexpected error launching session: {e}"
         logger.error(error)
         return SessionResult(success=False, error=error)
+
+
+def _detect_phase(line: str) -> str | None:
+    """Detect which agent/phase is running from Claude's output."""
+    lower = line.lower()
+
+    # Detect agent launches from Task tool usage
+    phase_keywords = {
+        "researcher": "researching",
+        "brand-identity": "branding",
+        "brand identity": "branding",
+        "ux-architect": "ux_design",
+        "ux architect": "ux_design",
+        "copywriter": "copywriting",
+        "ui-designer": "ui_design",
+        "ui designer": "ui_design",
+        "frontend-dev": "frontend_build",
+        "frontend dev": "frontend_build",
+        "create-next-app": "frontend_build",
+        "seo-specialist": "seo_optimization",
+        "seo specialist": "seo_optimization",
+        "cx-analyst": "cx_review",
+        "cx analyst": "cx_review",
+        "site-validator": "validation",
+        "site validator": "validation",
+        "deployer": "deploying",
+        "gh repo create": "github_push",
+        "deploy-pages": "github_pages",
+        "npm run build": "building",
+        "npx create-next-app": "scaffolding",
+    }
+
+    for keyword, phase in phase_keywords.items():
+        if keyword in lower:
+            return phase
+    return None
 
 
 def build_pm_prompt(business_data: dict, theme: dict) -> str:

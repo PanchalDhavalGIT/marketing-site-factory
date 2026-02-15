@@ -111,6 +111,18 @@ async def get_log_content(request: Request, slug: str):
     )
 
 
+# ── Live Activity Feed ──────────────────────────────────────────
+
+@router.get("/activity", response_class=HTMLResponse)
+async def get_activity(request: Request):
+    """Return live activity feed (polled by HTMX every 2s)."""
+    activity = state.get_live_activity()
+    return request.app.state.templates.TemplateResponse(
+        "partials/activity_feed.html",
+        {"request": request, "activity": activity},
+    )
+
+
 # ── Retry ────────────────────────────────────────────────────────
 
 @router.post("/retry/{slug}", response_class=HTMLResponse)

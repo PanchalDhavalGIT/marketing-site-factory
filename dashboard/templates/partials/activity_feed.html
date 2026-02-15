@@ -1,0 +1,82 @@
+{% if activity %}
+<div class="space-y-3">
+  {% for site in activity %}
+  <div class="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 bg-yellow-400 rounded-full pulse-dot"></span>
+        <span class="text-white text-sm font-medium">{{ site.business_name }}</span>
+        <span class="text-xs text-gray-500 font-mono">{{ site.slug }}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        {% if site.phase %}
+        <span class="text-xs px-2 py-0.5 rounded-full
+          {% if site.phase == 'researching' %}bg-blue-500/20 text-blue-400
+          {% elif site.phase == 'branding' %}bg-purple-500/20 text-purple-400
+          {% elif site.phase == 'ux_design' %}bg-indigo-500/20 text-indigo-400
+          {% elif site.phase == 'copywriting' %}bg-cyan-500/20 text-cyan-400
+          {% elif site.phase == 'ui_design' %}bg-pink-500/20 text-pink-400
+          {% elif site.phase in ('frontend_build', 'scaffolding', 'building') %}bg-yellow-500/20 text-yellow-400
+          {% elif site.phase == 'seo_optimization' %}bg-green-500/20 text-green-400
+          {% elif site.phase == 'cx_review' %}bg-teal-500/20 text-teal-400
+          {% elif site.phase == 'validation' %}bg-orange-500/20 text-orange-400
+          {% elif site.phase in ('deploying', 'github_push', 'github_pages') %}bg-emerald-500/20 text-emerald-400
+          {% else %}bg-gray-500/20 text-gray-400
+          {% endif %}">
+          {% if site.phase == 'researching' %}Researching
+          {% elif site.phase == 'branding' %}Brand Identity
+          {% elif site.phase == 'ux_design' %}UX Design
+          {% elif site.phase == 'copywriting' %}Copywriting
+          {% elif site.phase == 'ui_design' %}UI Design
+          {% elif site.phase == 'scaffolding' %}Scaffolding
+          {% elif site.phase == 'frontend_build' %}Frontend Build
+          {% elif site.phase == 'building' %}Building
+          {% elif site.phase == 'seo_optimization' %}SEO
+          {% elif site.phase == 'cx_review' %}CX Review
+          {% elif site.phase == 'validation' %}Validation
+          {% elif site.phase == 'deploying' %}Deploying
+          {% elif site.phase == 'github_push' %}GitHub Push
+          {% elif site.phase == 'github_pages' %}GitHub Pages
+          {% else %}{{ site.phase }}
+          {% endif %}
+        </span>
+        {% endif %}
+        <a href="/logs/{{ site.slug }}" class="text-xs text-gray-500 hover:text-gray-300">View Log</a>
+      </div>
+    </div>
+
+    <!-- Phase Pipeline -->
+    <div class="flex items-center gap-1 mb-3">
+      {% set phases = ['researching', 'branding', 'ux_design', 'copywriting', 'ui_design', 'frontend_build', 'seo_optimization', 'cx_review', 'validation', 'deploying'] %}
+      {% set phase_labels = ['Research', 'Brand', 'UX', 'Copy', 'UI', 'Build', 'SEO', 'CX', 'Validate', 'Deploy'] %}
+      {% set phase_idx = phases.index(site.phase) if site.phase in phases else -1 %}
+      {% for p in phases %}
+        {% if loop.index0 < phase_idx %}
+          <div class="h-1.5 flex-1 bg-green-500 rounded-full" title="{{ phase_labels[loop.index0] }}"></div>
+        {% elif loop.index0 == phase_idx %}
+          <div class="h-1.5 flex-1 bg-yellow-400 rounded-full animate-pulse" title="{{ phase_labels[loop.index0] }}"></div>
+        {% else %}
+          <div class="h-1.5 flex-1 bg-gray-700 rounded-full" title="{{ phase_labels[loop.index0] }}"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="flex justify-between text-[10px] text-gray-600 -mt-1 mb-2">
+      {% for label in phase_labels %}
+        <span>{{ label }}</span>
+      {% endfor %}
+    </div>
+
+    <!-- Last output line -->
+    {% if site.last_output %}
+    <div class="bg-gray-900 rounded px-3 py-2 font-mono text-xs text-gray-400 truncate border border-gray-800">
+      <span class="text-gray-600">></span> {{ site.last_output }}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-6 text-gray-600 text-sm">
+  No active builds. Start a batch to see live activity.
+</div>
+{% endif %}

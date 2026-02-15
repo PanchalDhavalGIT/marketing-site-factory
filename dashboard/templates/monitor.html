@@ -62,9 +62,20 @@
     {% include "partials/stats_cards.html" %}
   </div>
 
+  <!-- Live Activity Feed (auto-refresh every 2s) -->
+  <div class="mt-6">
+    <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+      <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Live Activity
+    </h3>
+    <div hx-get="/api/activity" hx-trigger="every 2s" hx-swap="innerHTML" id="activity-area">
+      {% include "partials/activity_feed.html" %}
+    </div>
+  </div>
+
   <!-- Progress Table (auto-refresh) -->
   <div class="mt-6">
-    <h3 class="text-lg font-semibold text-white mb-4">Sites Progress</h3>
+    <h3 class="text-lg font-semibold text-white mb-4">All Sites</h3>
     <div hx-get="/api/progress" hx-trigger="every 3s" hx-swap="innerHTML" id="progress-area">
       {% include "partials/progress_table.html" %}
     </div>

@@ -1,17 +1,12 @@
 <div class="space-y-0.5">
 {% for line in lines %}
-  {% set parsed = none %}
-  {% try %}
-    {% set parsed = line | tojson %}
-  {% except %}
-  {% endtry %}
-
   <div class="text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 px-2 py-0.5 rounded transition">
-    <span class="text-gray-600 select-none">{{ loop.index }}  </span>{{ line }}
+    <span class="text-gray-600 select-none">{{ loop.index }}  </span>
+    <span class="{% if 'ERROR' in line or 'error' in line %}text-red-400{% elif 'WARNING' in line or 'warning' in line %}text-amber-400{% elif 'SUCCESS' in line or 'complete' in line %}text-green-400{% elif 'Phase:' in line or 'Agent:' in line %}text-brand-400{% endif %}">{{ line }}</span>
   </div>
 {% endfor %}
 
-{% if not lines %}
+{% if not lines or (lines | length == 1 and 'No log file' in lines[0]) %}
   <div class="text-gray-600 p-4 text-center">No log entries yet.</div>
 {% endif %}
 </div>

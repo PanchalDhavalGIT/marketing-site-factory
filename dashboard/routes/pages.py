@@ -35,9 +35,10 @@ async def monitor_page(request: Request):
     """Real-time build monitoring page."""
     progress = state.get_progress()
     stats = state.get_stats()
+    activity = state.get_live_activity()
     return request.app.state.templates.TemplateResponse(
         "monitor.html",
-        {"request": request, "progress": progress, "stats": stats},
+        {"request": request, "progress": progress, "stats": stats, "activity": activity},
     )
 
 

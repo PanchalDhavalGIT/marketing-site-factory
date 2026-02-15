@@ -73,9 +73,11 @@ Launch a Task with `subagent_type: general-purpose`:
 If validation fails on blocking issues, launch a fix task and re-validate. Max 2 fix attempts.
 
 ### Phase 10: Deploy
-Launch TWO Tasks (can be parallel):
-1. GitHub publish: Use github-publish skill
-2. After GitHub succeeds: Vercel deploy using deploy-vercel skill
+Launch a Task with `subagent_type: general-purpose`:
+- Prompt: Deploy the site — create a separate GitHub repo `marketing-{slug}`, push all code, add GitHub Actions workflow for GitHub Pages, enable Pages via API.
+- Follow the github-publish skill first, then the deploy-ghpages skill.
+- Steps: `git init` → `git add .` → `git commit` → `gh repo create marketing-{slug} --public --source=. --push` → add `.github/workflows/deploy.yml` → `git push` → enable Pages API
+- Expected output: Write `deploy-result.json` with `github_url` and `pages_url`
 
 ### Final Report
 
@@ -84,8 +86,8 @@ Write `status.json`:
 {
   "business_name": "...",
   "status": "complete",
-  "github_url": "...",
-  "pages_url": "...",
+  "github_url": "https://github.com/{owner}/marketing-{slug}",
+  "pages_url": "https://{owner}.github.io/marketing-{slug}/",
   "cx_score": 85,
   "validation_score": 92,
   "phases_completed": 10,

@@ -92,6 +92,10 @@ class BatchRunner:
             retry_count = 0
             success = False
 
+            # Progress callback for real-time phase updates from Claude output
+            async def _on_phase(s, phase):
+                await self.progress.update_phase(s, phase)
+
             while retry_count <= MAX_RETRIES and not self._shutdown:
                 await self.progress.update_phase(slug, f"claude_session (attempt {retry_count + 1})")
                 result = await launch_session(
@@ -99,6 +103,7 @@ class BatchRunner:
                     prompt=prompt,
                     timeout=DEFAULT_SESSION_TIMEOUT,
                     site_slug=slug,
+                    progress_callback=_on_phase,
                 )
 
                 if result.success:
