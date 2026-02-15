@@ -59,7 +59,7 @@ async def launch_session(
         CLAUDE_CMD,
         "-p",  # Print mode (non-interactive)
         prompt,
-        "--output-format", "text",  # Text mode for real-time streaming
+        "--output-format", "stream-json",  # Stream JSON events for real-time monitoring
         "--max-turns", str(CLAUDE_MAX_TURNS),
         "--dangerously-skip-permissions",
     ]
@@ -68,7 +68,7 @@ async def launch_session(
     env["HOME"] = os.environ.get("HOME", "")
 
     logger.info(f"Launching Claude session in {workspace}")
-    logger.debug(f"CLI flags: --output-format text --max-turns {CLAUDE_MAX_TURNS} --dangerously-skip-permissions")
+    logger.debug(f"CLI flags: --output-format stream-json --max-turns {CLAUDE_MAX_TURNS} --dangerously-skip-permissions")
     logger.debug(f"Prompt length: {len(prompt)} chars")
 
     # Prepare live log file for streaming (clear previous run)
@@ -90,25 +90,25 @@ async def launch_session(
         start_time = time.time()
 
         async def read_stream(stream, collector, is_stderr=False):
-            """Read stream line-by-line and write to log in real-time."""
+            """Read stream line-by-line, parse stream-json events, write to live log."""
             while True:
                 line = await stream.readline()
                 if not line:
                     break
                 decoded = line.decode("utf-8", errors="replace").rstrip()
+                if not decoded:
+                    continue
                 collector.append(decoded)
 
-                # Write to live log file for dashboard
-                with open(live_log, "a") as f:
-                    elapsed = int(time.time() - start_time)
-                    prefix = "ERR" if is_stderr else "OUT"
-                    f.write(f"[{elapsed:>4}s] [{prefix}] {decoded}\n")
+                # Parse stream-json events for human-readable live log
+                display_line = _parse_stream_event(decoded) if not is_stderr else decoded
 
-                # Log to structured log
-                if is_stderr:
-                    logger.warning(f"stderr: {decoded[:300]}")
-                else:
-                    logger.info(f"stdout: {decoded[:300]}")
+                if display_line:
+                    # Write to live log file for dashboard
+                    with open(live_log, "a") as f:
+                        elapsed = int(time.time() - start_time)
+                        prefix = "ERR" if is_stderr else "OUT"
+                        f.write(f"[{elapsed:>4}s] [{prefix}] {display_line}\n")
 
                 # Detect phase changes from output and fire callback
                 if progress_callback and not is_stderr:
@@ -159,6 +159,54 @@ async def launch_session(
         error = f"Unexpected error launching session: {e}"
         logger.error(error)
         return SessionResult(success=False, error=error)
+
+
+def _parse_stream_event(raw: str) -> str | None:
+    """Parse a stream-json event into a human-readable log line."""
+    try:
+        event = json.loads(raw)
+    except json.JSONDecodeError:
+        return raw[:300] if raw.strip() else None
+
+    etype = event.get("type", "")
+
+    if etype == "assistant":
+        # Claude's text response
+        msg = event.get("message", {})
+        content = msg.get("content", [])
+        parts = []
+        for block in content:
+            if block.get("type") == "text":
+                text = block.get("text", "")
+                if text.strip():
+                    parts.append(text[:200])
+            elif block.get("type") == "tool_use":
+                tool = block.get("name", "?")
+                parts.append(f"[Tool: {tool}]")
+        return " ".join(parts) if parts else None
+
+    elif etype == "content_block_start":
+        block = event.get("content_block", {})
+        if block.get("type") == "tool_use":
+            return f"[Calling: {block.get('name', '?')}]"
+        return None
+
+    elif etype == "content_block_delta":
+        delta = event.get("delta", {})
+        if delta.get("type") == "text_delta":
+            text = delta.get("text", "")
+            return text[:200] if text.strip() else None
+        elif delta.get("type") == "input_json_delta":
+            return None  # Skip JSON input streaming (too noisy)
+        return None
+
+    elif etype == "result":
+        return f"[Session complete — cost: ${event.get('cost_usd', '?')}, turns: {event.get('num_turns', '?')}]"
+
+    elif etype == "system":
+        return f"[System: {event.get('message', '')[:100]}]"
+
+    return None
 
 
 def _detect_phase(line: str) -> str | None:
